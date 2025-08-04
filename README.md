@@ -153,7 +153,7 @@ This extension is built with TypeScript and uses the VS Code Extension API. Cont
 
 ## License
 
-MIT License - see LICENSE file for details.
+Apache License 2.0 - see LICENSE file for details.
 
 ## Privacy
 
