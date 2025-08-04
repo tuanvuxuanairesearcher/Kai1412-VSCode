@@ -1,0 +1,286 @@
+{
+  "name": "ai-assistant-extension",
+  "displayName": "AI Assistant for VS Code",
+  "description": "Comprehensive AI-powered coding assistant with multi-model support",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other",
+    "AI",
+    "Productivity"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "id": "aiAssistantChat",
+          "name": "AI Assistant",
+          "when": "config.aiAssistant.showChatPanel"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "aiAssistant",
+          "title": "AI Assistant",
+          "icon": "$(robot)"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "aiAssistant.openChat",
+        "title": "Open AI Chat",
+        "icon": "$(comment-discussion)"
+      },
+      {
+        "command": "aiAssistant.generateCode",
+        "title": "Generate Code with AI"
+      },
+      {
+        "command": "aiAssistant.explainCode",
+        "title": "Explain Code"
+      },
+      {
+        "command": "aiAssistant.writeDocumentation",
+        "title": "Write Documentation"
+      },
+      {
+        "command": "aiAssistant.findProblems",
+        "title": "Find Problems"
+      },
+      {
+        "command": "aiAssistant.generateUnitTests",
+        "title": "Generate Unit Tests"
+      },
+      {
+        "command": "aiAssistant.convertToLanguage",
+        "title": "Convert to Another Language"
+      },
+      {
+        "command": "aiAssistant.suggestRefactoring",
+        "title": "Suggest Refactoring"
+      },
+      {
+        "command": "aiAssistant.suggestNames",
+        "title": "Suggest Names"
+      },
+      {
+        "command": "aiAssistant.generateCommitMessage",
+        "title": "Generate Commit Message with AI"
+      },
+      {
+        "command": "aiAssistant.explainCommit",
+        "title": "Explain Commit with AI"
+      },
+      {
+        "command": "aiAssistant.explainError",
+        "title": "Explain Error with AI"
+      },
+      {
+        "command": "aiAssistant.toggleInlineCompletion",
+        "title": "Toggle AI Code Completion"
+      },
+      {
+        "command": "aiAssistant.openSettings",
+        "title": "Open AI Assistant Settings"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "aiAssistant.generateCode",
+        "key": "ctrl+\\",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "aiAssistant.toggleInlineCompletion",
+        "key": "alt+shift+\\",
+        "when": "editorTextFocus"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "submenu": "aiAssistant.editorContext",
+          "group": "1_modification@1"
+        }
+      ],
+      "aiAssistant.editorContext": [
+        {
+          "command": "aiAssistant.explainCode",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "aiAssistant.writeDocumentation",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "aiAssistant.findProblems",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "aiAssistant.generateUnitTests",
+          "when": "editorTextFocus"
+        },
+        {
+          "command": "aiAssistant.convertToLanguage",
+          "when": "editorTextFocus"
+        },
+        {
+          "command": "aiAssistant.suggestRefactoring",
+          "when": "editorHasSelection"
+        }
+      ],
+      "scm/title": [
+        {
+          "command": "aiAssistant.generateCommitMessage",
+          "group": "navigation",
+          "when": "scmProvider == git"
+        }
+      ]
+    },
+    "submenus": [
+      {
+        "id": "aiAssistant.editorContext",
+        "label": "AI Actions"
+      }
+    ],
+    "configuration": [
+      {
+        "title": "AI Assistant",
+        "properties": {
+          "aiAssistant.provider": {
+            "type": "string",
+            "enum": [
+              "local",
+              "openai",
+              "gemini"
+            ],
+            "default": "openai",
+            "description": "Select AI provider"
+          },
+          "aiAssistant.openai.apiKey": {
+            "type": "string",
+            "default": "",
+            "description": "OpenAI API Key"
+          },
+          "aiAssistant.openai.model": {
+            "type": "string",
+            "enum": [
+              "gpt-4",
+              "gpt-4-turbo",
+              "gpt-3.5-turbo"
+            ],
+            "default": "gpt-4",
+            "description": "OpenAI model to use"
+          },
+          "aiAssistant.gemini.apiKey": {
+            "type": "string",
+            "default": "",
+            "description": "Google Gemini API Key"
+          },
+          "aiAssistant.gemini.model": {
+            "type": "string",
+            "enum": [
+              "gemini-pro",
+              "gemini-pro-vision"
+            ],
+            "default": "gemini-pro",
+            "description": "Gemini model to use"
+          },
+          "aiAssistant.local.endpoint": {
+            "type": "string",
+            "default": "http://localhost:11434",
+            "description": "Local AI endpoint URL"
+          },
+          "aiAssistant.local.model": {
+            "type": "string",
+            "default": "llama2",
+            "description": "Local AI model name"
+          },
+          "aiAssistant.local.apiKey": {
+            "type": "string",
+            "default": "",
+            "description": "Local AI API Key (if required)"
+          },
+          "aiAssistant.showChatPanel": {
+            "type": "boolean",
+            "default": true,
+            "description": "Show AI chat panel in explorer"
+          },
+          "aiAssistant.enableInlineCompletion": {
+            "type": "boolean",
+            "default": true,
+            "description": "Enable AI-powered inline code completion"
+          },
+          "aiAssistant.completionAcceptKey": {
+            "type": "string",
+            "enum": [
+              "Tab",
+              "Enter",
+              "Ctrl+Enter"
+            ],
+            "default": "Tab",
+            "description": "Key to accept AI code completion"
+          },
+          "aiAssistant.prompts.codeGeneration": {
+            "type": "string",
+            "default": "Generate code based on the following description. Write clean, well-commented, and production-ready code:\n\n{description}\n\nContext:\n- File: {fileName}\n- Language: {language}\n- Selected code: {selectedCode}",
+            "description": "Prompt template for code generation"
+          },
+          "aiAssistant.prompts.codeExplanation": {
+            "type": "string",
+            "default": "Explain the following code in detail. Break down what it does, how it works, and any important concepts:\n\n```{language}\n{code}\n```",
+            "description": "Prompt template for code explanation"
+          },
+          "aiAssistant.prompts.documentation": {
+            "type": "string",
+            "default": "Write comprehensive documentation for the following {language} code. Include parameter descriptions, return values, examples, and any important notes:\n\n```{language}\n{code}\n```\n\nGenerate appropriate documentation format ({docFormat}) for this language.",
+            "description": "Prompt template for documentation generation"
+          },
+          "aiAssistant.prompts.problemFinding": {
+            "type": "string",
+            "default": "Analyze the following code for potential issues, bugs, performance problems, and code quality concerns. Provide specific recommendations for improvement:\n\n```{language}\n{code}\n```",
+            "description": "Prompt template for finding problems"
+          },
+          "aiAssistant.prompts.unitTests": {
+            "type": "string",
+            "default": "Generate comprehensive unit tests for the following {language} function/class. Include edge cases, error scenarios, and positive test cases:\n\n```{language}\n{code}\n```\n\nUse appropriate testing framework for {language}.",
+            "description": "Prompt template for unit test generation"
+          },
+          "aiAssistant.prompts.refactoring": {
+            "type": "string",
+            "default": "Suggest refactoring improvements for the following code. Focus on readability, maintainability, performance, and best practices:\n\n```{language}\n{code}\n```",
+            "description": "Prompt template for refactoring suggestions"
+          },
+          "aiAssistant.prompts.commitMessage": {
+            "type": "string",
+            "default": "Generate a clear and concise commit message based on the following git diff. Follow conventional commit format:\n\n{diff}",
+            "description": "Prompt template for commit message generation"
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0",
+    "@types/node": "18.x",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "simple-git": "^3.20.0"
+  }
+}
