@@ -66,7 +66,7 @@ export class GitHelper {
   async getCommitHistory(count: number = 10): Promise<any[]> {
     try {
       const log = await this.git.log({ maxCount: count });
-      return log.all;
+      return [...log.all];
     } catch (error) {
       throw new Error(`Failed to get commit history: ${error}`);
     }
@@ -103,7 +103,7 @@ export class GitHelper {
     try {
       const relativePath = path.relative(this.workspaceRoot, filePath);
       const log = await this.git.log({ file: relativePath, maxCount: count });
-      return log.all;
+      return [...log.all];
     } catch (error) {
       throw new Error(`Failed to get file history: ${error}`);
     }

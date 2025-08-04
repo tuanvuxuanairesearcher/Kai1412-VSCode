@@ -64,7 +64,7 @@ export class CommandsProvider {
         }
 
         const prompt = this.promptLibrary.formatPrompt('errorExplanation', {
-          error: errorText,
+          error: errorText || 'Unknown error',
           fileName: fileName || 'unknown',
           language: language || 'unknown',
           code: context || 'No additional context available'
@@ -73,7 +73,7 @@ export class CommandsProvider {
         const explanation = await model.generateCompletion(prompt);
 
         // Show explanation in a new document
-        await this.showErrorExplanation(explanation, errorText);
+        await this.showErrorExplanation(explanation, errorText || 'Unknown error');
       });
 
     } catch (error: any) {

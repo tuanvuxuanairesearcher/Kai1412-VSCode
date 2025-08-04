@@ -20,7 +20,7 @@ export class ConfigurationManager {
     const config = vscode.workspace.getConfiguration('aiAssistant.openai');
     return {
       apiKey: config.get<string>('apiKey', ''),
-      model: config.get<string>('model', 'gpt-4')
+      model: config.get<string>('model', 'gpt-4o-mini')
     };
   }
 
@@ -28,7 +28,7 @@ export class ConfigurationManager {
     const config = vscode.workspace.getConfiguration('aiAssistant.gemini');
     return {
       apiKey: config.get<string>('apiKey', ''),
-      model: config.get<string>('model', 'gemini-pro')
+      model: config.get<string>('model', 'gemini-2.5-flash')
     };
   }
 

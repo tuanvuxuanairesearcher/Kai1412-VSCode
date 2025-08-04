@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { ModelFactory } from './models';
 import { ConfigurationManager, PromptLibrary } from './config';
-import { ChatPanel } from './ui';
+import { ChatPanel, ChatViewProvider } from './ui';
 import { EditorAssistanceProvider } from './providers/editorAssistance';
 import { InlineCompletionProvider } from './providers/inlineCompletion';
 import { GitIntegrationProvider } from './providers/gitIntegration';
@@ -32,6 +32,12 @@ export function activate(context: vscode.ExtensionContext) {
     const inlineCompletion = new InlineCompletionProvider();
     const gitIntegration = new GitIntegrationProvider();
     const commandsProvider = new CommandsProvider();
+    
+    // Register the chat view provider
+    const chatViewProvider = new ChatViewProvider(context.extensionUri);
+    context.subscriptions.push(
+        vscode.window.registerWebviewViewProvider(ChatViewProvider.viewType, chatViewProvider)
+    );
 
     // Register commands
     const commands = [

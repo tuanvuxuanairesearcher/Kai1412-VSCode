@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import { AIModel, AIMessage, AIModelConfig, AIModelResponse, StreamingResponse, CodeContext } from './types';
+import { getOpenAIModelInfo, openaiSupportsMultimodal, openaiSupportsFunctionCalling, supportsAdvancedReasoning } from './openai-models';
 
 export class OpenAIModel extends AIModel {
   private client: AxiosInstance;
@@ -13,19 +14,36 @@ export class OpenAIModel extends AIModel {
         'Content-Type': 'application/json'
       }
     });
+    
+    // Log model info for debugging
+    const modelInfo = getOpenAIModelInfo(config.model);
+    if (modelInfo) {
+      console.log(`Using ${modelInfo.name}: ${modelInfo.description}`);
+      console.log(`Series: ${modelInfo.series}, Capabilities: ${modelInfo.capabilities.join(', ')}`);
+    }
   }
 
   async generateResponse(messages: AIMessage[]): Promise<AIModelResponse> {
     try {
-      const response = await this.client.post('/chat/completions', {
+      const modelInfo = getOpenAIModelInfo(this.config.model);
+      const maxTokens = modelInfo?.maxTokens || this.config.maxTokens || 2000;
+      
+      const requestBody: any = {
         model: this.config.model,
         messages: messages.map(msg => ({
           role: msg.role,
           content: msg.content
         })),
         temperature: this.config.temperature || 0.7,
-        max_tokens: this.config.maxTokens || 2000
-      });
+        max_tokens: Math.min(maxTokens, 4096)
+      };
+
+      // Add function calling support for compatible models
+      if (openaiSupportsFunctionCalling(this.config.model)) {
+        // Could add function definitions here if needed
+      }
+
+      const response = await this.client.post('/chat/completions', requestBody);
 
       return {
         content: response.data.choices[0].message.content,
@@ -122,10 +140,13 @@ export class OpenAIModel extends AIModel {
     return !!(this.config.apiKey && this.config.model);
   }
 
-  getModelInfo(): { name: string; provider: string } {
+  getModelInfo(): { name: string; provider: string; capabilities?: string[]; series?: string } {
+    const modelInfo = getOpenAIModelInfo(this.config.model);
     return {
-      name: this.config.model,
-      provider: 'OpenAI'
+      name: modelInfo?.name || this.config.model,
+      provider: 'OpenAI',
+      capabilities: modelInfo?.capabilities,
+      series: modelInfo?.series
     };
   }
 }

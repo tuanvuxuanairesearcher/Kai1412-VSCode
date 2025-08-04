@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import { AIModel, AIMessage, AIModelConfig, AIModelResponse, StreamingResponse, CodeContext } from './types';
+import { getGeminiModelInfo, geminiSupportsMultimodal, geminiSupportsFunctionCalling } from './gemini-models';
 
 export class GeminiModel extends AIModel {
   private client: AxiosInstance;
@@ -12,11 +13,19 @@ export class GeminiModel extends AIModel {
         'Content-Type': 'application/json'
       }
     });
+    
+    // Log model info for debugging
+    const modelInfo = getGeminiModelInfo(config.model);
+    if (modelInfo) {
+      console.log(`Using ${modelInfo.name}: ${modelInfo.description}`);
+    }
   }
 
   async generateResponse(messages: AIMessage[]): Promise<AIModelResponse> {
     try {
       const contents = this.convertMessagesToGeminiFormat(messages);
+      const modelInfo = getGeminiModelInfo(this.config.model);
+      const maxTokens = modelInfo?.maxTokens || this.config.maxTokens || 2000;
       
       const response = await this.client.post(
         `/models/${this.config.model}:generateContent?key=${this.config.apiKey}`,
@@ -24,7 +33,7 @@ export class GeminiModel extends AIModel {
           contents,
           generationConfig: {
             temperature: this.config.temperature || 0.7,
-            maxOutputTokens: this.config.maxTokens || 2000
+            maxOutputTokens: Math.min(maxTokens, 8192)
           }
         }
       );
@@ -147,10 +156,12 @@ export class GeminiModel extends AIModel {
     return !!(this.config.apiKey && this.config.model);
   }
 
-  getModelInfo(): { name: string; provider: string } {
+  getModelInfo(): { name: string; provider: string; capabilities?: string[] } {
+    const modelInfo = getGeminiModelInfo(this.config.model);
     return {
-      name: this.config.model,
-      provider: 'Google Gemini'
+      name: modelInfo?.name || this.config.model,
+      provider: 'Google Gemini',
+      capabilities: modelInfo?.capabilities
     };
   }
 }

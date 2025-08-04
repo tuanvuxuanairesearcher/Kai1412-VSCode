@@ -16,21 +16,23 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
-    "views": {
-      "explorer": [
-        {
-          "id": "aiAssistantChat",
-          "name": "AI Assistant",
-          "when": "config.aiAssistant.showChatPanel"
-        }
-      ]
-    },
     "viewsContainers": {
       "activitybar": [
         {
           "id": "aiAssistant",
           "title": "AI Assistant",
-          "icon": "$(robot)"
+          "icon": "./resources/icons/ai-assistant.svg"
+        }
+      ]
+    },
+    "views": {
+      "aiAssistant": [
+        {
+          "id": "aiAssistant.chatView",
+          "name": "AI Chat",
+          "when": "true",
+          "type": "webview",
+          "icon": "$(comment-discussion)"
         }
       ]
     },
@@ -174,11 +176,29 @@
           "aiAssistant.openai.model": {
             "type": "string",
             "enum": [
+              "gpt-4.1",
+              "gpt-4.1-mini",
+              "gpt-4.1-nano",
+              "gpt-4.5-preview",
+              "gpt-4o",
+              "gpt-4o-mini",
+              "gpt-4o-audio-preview",
+              "gpt-4o-realtime-preview",
+              "o1",
+              "o1-pro",
+              "o1-mini",
+              "o3",
+              "o3-pro",
+              "o3-mini",
+              "o3-deep-research",
+              "o4-mini",
+              "o4-mini-deep-research",
+              "codex-mini-latest",
               "gpt-4",
               "gpt-4-turbo",
               "gpt-3.5-turbo"
             ],
-            "default": "gpt-4",
+            "default": "gpt-4o-mini",
             "description": "OpenAI model to use"
           },
           "aiAssistant.gemini.apiKey": {
@@ -189,10 +209,13 @@
           "aiAssistant.gemini.model": {
             "type": "string",
             "enum": [
+              "gemini-2.5-pro",
+              "gemini-2.5-flash",
+              "gemini-2.5-flash-lite",
               "gemini-pro",
               "gemini-pro-vision"
             ],
-            "default": "gemini-pro",
+            "default": "gemini-2.5-flash",
             "description": "Gemini model to use"
           },
           "aiAssistant.local.endpoint": {
@@ -272,15 +295,30 @@
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./"
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "test-server": "./scripts/start-test-server.sh",
+    "test-all": "./scripts/test-all.sh",
+    "demo": "node scripts/demo-test.js",
+    "demo-setup": "./scripts/demo-setup.sh"
   },
   "devDependencies": {
-    "@types/vscode": "^1.74.0",
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.3",
     "@types/node": "18.x",
+    "@types/vscode": "^1.74.0",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
+    "@vscode/test-electron": "^2.3.6",
+    "eslint": "^8.52.0",
+    "glob": "^10.3.10",
+    "mocha": "^10.2.0",
     "typescript": "^4.9.4"
   },
   "dependencies": {
-    "axios": "^1.6.0",
+    "axios": "^1.11.0",
     "simple-git": "^3.20.0"
   }
 }

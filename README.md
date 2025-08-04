@@ -5,8 +5,8 @@ A comprehensive AI-powered coding assistant extension for Visual Studio Code wit
 ## Features
 
 ### 🤖 Multi-Model AI Support
-- **OpenAI GPT**: GPT-4, GPT-4-turbo, GPT-3.5-turbo
-- **Google Gemini**: Gemini-pro, Gemini-pro-vision
+- **OpenAI GPT**: GPT-4.1, GPT-4.5, GPT-4o, O1/O3/O4 Series, Codex
+- **Google Gemini**: Gemini-2.5-pro, Gemini-2.5-flash, Gemini-2.5-flash-lite
 - **Local AI**: Compatible with Ollama and OpenAI-compatible endpoints
 
 ### 💬 AI Chat Interface
@@ -59,7 +59,7 @@ A comprehensive AI-powered coding assistant extension for Visual Studio Code wit
 {
   "aiAssistant.provider": "openai",
   "aiAssistant.openai.apiKey": "your-api-key",
-  "aiAssistant.openai.model": "gpt-4"
+  "aiAssistant.openai.model": "gpt-4o-mini"
 }
 ```
 
@@ -68,7 +68,7 @@ A comprehensive AI-powered coding assistant extension for Visual Studio Code wit
 {
   "aiAssistant.provider": "gemini",
   "aiAssistant.gemini.apiKey": "your-api-key",
-  "aiAssistant.gemini.model": "gemini-pro"
+  "aiAssistant.gemini.model": "gemini-2.5-flash"
 }
 ```
 
@@ -147,13 +147,182 @@ All commands are available via `Ctrl+Shift+P`:
 2. Look at the VS Code developer console for error messages
 3. Try refreshing the AI model configuration
 
+## Testing
+
+### Quick Test Setup
+
+1. **Start the test server:**
+   ```bash
+   # Recommended - using server manager
+   ./scripts/server-manager.sh start
+   
+   # Alternative methods:
+   ./scripts/start-test-server.sh
+   # Or manually:
+   cd test-server && npm install && npm start
+   ```
+
+2. **Configure VS Code to use test server:**
+   - Open VS Code Settings
+   - Search for "AI Assistant"
+   - Set:
+     - Provider: `local`
+     - Local Endpoint: `http://localhost:1998`
+     - Local Model: `qwen3-0.6b`
+     - Local API Key: `EMPTY`
+
+3. **Test all features:**
+   ```bash
+   ./scripts/test-all.sh
+   ```
+
+### Manual Testing Checklist
+
+#### 🤖 AI Chat Interface
+- [ ] Open AI chat panel (click AI Assistant icon)
+- [ ] Send a basic message: "Hello, can you help me?"
+- [ ] Test context references:
+  - [ ] `#thisFile` - reference current file
+  - [ ] `#localChanges` - reference git changes
+  - [ ] `#file:package.json` - reference specific file
+- [ ] Export chat history
+- [ ] Clear chat history
+
+#### ✏️ Code Generation & Assistance
+- [ ] **Generate Code** (`Ctrl+\`):
+  - Create a new file, press `Ctrl+\`
+  - Enter: "Create a function to validate email addresses"
+  - Verify code is generated and diff view appears
+  
+- [ ] **Explain Code**:
+  - Select some code, right-click → AI Actions → Explain Code
+  - Test with regex: `/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/`
+  - Test with SQL: `SELECT * FROM users WHERE active = 1`
+  
+- [ ] **Write Documentation**:
+  - Select a function, right-click → AI Actions → Write Documentation
+  - Verify JSDoc/docstring is generated
+  
+- [ ] **Find Problems**:
+  - Select problematic code, right-click → AI Actions → Find Problems
+  - Verify analysis and suggestions appear
+  
+- [ ] **Generate Unit Tests**:
+  - Place cursor in a function, right-click → AI Actions → Generate Unit Tests
+  - Verify test file is created
+  
+- [ ] **Convert Language**:
+  - Open a JavaScript file, right-click → AI Actions → Convert to Another Language
+  - Select Python, verify conversion
+  
+- [ ] **Suggest Refactoring**:
+  - Select code that could be improved, right-click → AI Actions → Suggest Refactoring
+  - Verify refactored version in diff view
+  
+- [ ] **Smart Naming**:
+  - Place cursor on a variable name, press F2, click AI icon for suggestions
+
+#### 🚀 Inline Code Completion
+- [ ] **Enable/Disable** (`Alt+Shift+\`):
+  - Toggle inline completion on/off
+  - Verify status message appears
+  
+- [ ] **Test Completions**:
+  - Type: `function validate` and wait for suggestions
+  - Type: `const email = ` and wait
+  - Press `Tab` to accept completion
+
+#### 🔗 Git Integration
+- [ ] **Generate Commit Message**:
+  - Make some changes to files
+  - Go to Source Control panel
+  - Click "Generate Commit Message with AI"
+  - Verify appropriate commit message is generated
+  
+- [ ] **Explain Commit**:
+  - Run command: "AI Assistant: Explain Commit"
+  - Select "Latest commit" or pick from history
+  - Verify commit explanation appears
+
+#### 🛠️ Error Analysis
+- [ ] **Explain Error**:
+  - Select error text or run "AI Assistant: Explain Error"
+  - Enter: `TypeError: Cannot read property 'length' of undefined`
+  - Verify detailed explanation and solutions
+
+#### ⚙️ Configuration & Settings
+- [ ] **Open Settings**: Command palette → "AI Assistant: Open Settings"
+- [ ] **Test Provider Switching**: Switch between OpenAI, Gemini, Local
+- [ ] **Prompt Library**: Command palette → "AI Assistant: Open Prompt Library"
+  - [ ] Edit a prompt template
+  - [ ] Reset to default
+  - [ ] Verify changes take effect
+
+### Automated Testing
+
+Run the complete test suite:
+
+```bash
+# Install dependencies and run all tests
+./scripts/test-all.sh
+
+# Or run individual components:
+npm run compile             # Compile TypeScript
+npm run lint               # Run ESLint
+npm run test               # Run unit and integration tests
+npm run test-server        # Just start the test server
+npm run demo               # Test API programmatically
+
+# Server management commands:
+./scripts/server-manager.sh start    # Start server
+./scripts/server-manager.sh stop     # Stop server
+./scripts/server-manager.sh status   # Check status
+./scripts/server-manager.sh test     # Test functionality
+./scripts/server-manager.sh restart  # Restart server
+```
+
+### Test Coverage Areas
+
+- **Unit Tests**: Core classes and utilities
+- **Integration Tests**: AI model communication
+- **Performance Tests**: Concurrent requests, response times
+- **Error Handling**: Network errors, invalid API keys
+- **Configuration**: Settings validation and updates
+
+### Troubleshooting Tests
+
+**Mock server won't start:**
+- Use server manager: `./scripts/server-manager.sh restart`
+- Check server status: `./scripts/server-manager.sh status`
+- Manual check: `lsof -i :1998` (should show running process)
+- Kill existing process: `./scripts/server-manager.sh stop`
+- Install dependencies: `cd test-server && npm install`
+
+**Tests fail with network errors:**
+- Ensure mock server is running on localhost:1998
+- Check firewall/antivirus blocking localhost connections
+
+**Extension not loading in test:**
+- Compile TypeScript: `npm run compile`
+- Check VS Code developer console for errors
+- Verify extension manifest (package.json) is valid
+
 ## Contributing
 
-This extension is built with TypeScript and uses the VS Code Extension API. Contributions are welcome!
+This extension is built with TypeScript and uses the VS Code Extension API. 
+
+### Development Setup
+1. Clone the repository
+2. Run `npm install` to install dependencies  
+3. Run `npm run compile` to build TypeScript
+4. Press F5 to launch Extension Development Host
+5. Run tests with `./scripts/test-all.sh`
+
+Contributions are welcome!
 
 ## License
 
-Apache License 2.0 - see LICENSE file for details.
+MIT License - see LICENSE file for details.
 
 ## Privacy
 

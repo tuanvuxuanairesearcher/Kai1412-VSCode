@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- AI Assistant Robot Icon - Dark Theme -->
+  <!-- Head -->
+  <rect x="6" y="3" width="12" height="10" rx="2" stroke="#CCCCCC" stroke-width="1.5" fill="none"/>
+  
+  <!-- Eyes -->
+  <circle cx="9" cy="7" r="1.5" fill="#00D4FF"/>
+  <circle cx="15" cy="7" r="1.5" fill="#00D4FF"/>
+  
+  <!-- Mouth -->
+  <path d="M10 10.5 Q12 12 14 10.5" stroke="#CCCCCC" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  
+  <!-- Antenna -->
+  <line x1="12" y1="3" x2="12" y2="1" stroke="#CCCCCC" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="12" cy="1" r="0.5" fill="#00D4FF"/>
+  
+  <!-- Body -->
+  <rect x="8" y="13" width="8" height="6" rx="1" stroke="#CCCCCC" stroke-width="1.5" fill="none"/>
+  
+  <!-- Body Details -->
+  <circle cx="10" cy="15.5" r="0.5" fill="#00D4FF"/>
+  <circle cx="14" cy="15.5" r="0.5" fill="#00D4FF"/>
+  <line x1="10" y1="17" x2="14" y2="17" stroke="#CCCCCC" stroke-width="1" stroke-linecap="round"/>
+  
+  <!-- Arms -->
+  <line x1="6" y1="15" x2="4" y2="15" stroke="#CCCCCC" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="18" y1="15" x2="20" y2="15" stroke="#CCCCCC" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Legs -->
+  <line x1="10" y1="19" x2="10" y2="22" stroke="#CCCCCC" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="14" y1="19" x2="14" y2="22" stroke="#CCCCCC" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Chat Bubble Indicator -->
+  <circle cx="19" cy="6" r="3" fill="#00D4FF" opacity="0.9"/>
+  <path d="M17.5 5.5 L18.5 6.5 L20.5 4.5" stroke="white" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

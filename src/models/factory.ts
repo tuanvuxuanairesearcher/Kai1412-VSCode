@@ -61,14 +61,14 @@ export class ModelFactory {
         return {
           ...baseConfig,
           apiKey: config.get<string>('openai.apiKey', ''),
-          model: config.get<string>('openai.model', 'gpt-4')
+          model: config.get<string>('openai.model', 'gpt-4o-mini')
         };
       
       case 'gemini':
         return {
           ...baseConfig,
           apiKey: config.get<string>('gemini.apiKey', ''),
-          model: config.get<string>('gemini.model', 'gemini-pro')
+          model: config.get<string>('gemini.model', 'gemini-2.5-flash')
         };
       
       case 'local':
